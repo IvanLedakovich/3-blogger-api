@@ -1,0 +1,27 @@
+{
+	"trailingComma": "none",
+	"tabWidth": 1,
+	"useTabs": true,
+	"semi": true,
+	"singleQuote": true,
+	"arrowParents": "avoid",
+	"importOrder": [
+		"<THIRD_PARTT_MODULES",
+		"^@/components/(.*)$",
+		"^@/layout/(.*)$",
+		"^@/ui/(.*)$",
+		"^@/providers/(.*)$",
+		"^@/shared/(.*)$",
+		"^@/assets/(.*)$",
+		"^@/config/(.*)$",
+		"^@/store/(.*)$",
+		"^@/hooks/(.*)$",
+		"^@/types/(.*)$",
+		"^@/utils/(.*)$",
+		"^@/api/(.*)$",
+		"^../(.*)",
+		"^./(.*)"
+	],
+	"importOrderSeparation": true,
+	"importOrderSorfSpecifiers": true
+}
