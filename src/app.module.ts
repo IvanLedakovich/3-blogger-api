@@ -4,7 +4,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { User } from './user.entity';
+import { User } from './user/user.entity';
+import { Post } from './post/post.entity';
 
 @Module({
 	imports: [
@@ -16,10 +17,11 @@ import { User } from './user.entity';
 			username: process.env.DATABASE_USERNAME,
 			password: process.env.DATABASE_PASSWORD,
 			database: '3-blogger-api',
-			entities: [User],
+			entities: [User, Post],
 			synchronize: true
 		}),
 		TypeOrmModule.forFeature([User]),
+		TypeOrmModule.forFeature([Post]),
 		JwtModule.register({
 			secret: process.env.JWT_SECRET,
 			signOptions: { expiresIn: process.env.EXPIRY_TERM }

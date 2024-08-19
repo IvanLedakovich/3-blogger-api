@@ -2,8 +2,11 @@ import {
 	BadRequestException,
 	Body,
 	Controller,
+	Delete,
 	Get,
+	Patch,
 	Post,
+	Put,
 	Req,
 	Res,
 	UnauthorizedException
@@ -27,7 +30,7 @@ export class AppController {
 	) {
 		const hashedPassword = await bcrypt.hash(password, 12);
 
-		const user = await this.appService.create({
+		const user = await this.appService.createUser({
 			email,
 			password: hashedPassword
 		});
@@ -68,7 +71,6 @@ export class AppController {
 			const cookie = request.cookies['jwt'];
 
 			const data = await this.jwtService.verifyAsync(cookie);
-			console.log(data);
 
 			if (!data) {
 				throw new UnauthorizedException();
@@ -91,5 +93,105 @@ export class AppController {
 		return {
 			message: 'success'
 		};
+	}
+
+	@Get('posts')
+	async getPosts(@Req() request: Request) {
+		try {
+			const posts = await this.appService.getAllPosts();
+
+			return posts;
+		} catch (e) {
+			throw new BadRequestException();
+		}
+	}
+
+	@Post('posts/create')
+	async createPost(
+		@Req() request: Request,
+		@Body('header') header: string,
+		@Body('text') text: string
+	) {
+		try {
+			const cookie = request.cookies['jwt'];
+
+			const data = await this.jwtService.verifyAsync(cookie);
+
+			const user = await this.appService.findOne({ id: data['id'] });
+
+			const post = await this.appService.createPost({
+				header,
+				text,
+				authorId: user.id
+			});
+
+			return post;
+		} catch (e) {
+			throw new UnauthorizedException();
+		}
+	}
+
+	@Put('posts/update')
+	async updatePost(
+		@Req() request: Request,
+		@Body('id') id: number,
+		@Body('header') header: string,
+		@Body('text') text: string
+	) {
+		try {
+			const cookie = request.cookies['jwt'];
+
+			const data = await this.jwtService.verifyAsync(cookie);
+
+			const user = await this.appService.findOne({ id: data['id'] });
+
+			const post = await this.appService.getPostById({ id: id });
+
+			if (!post) {
+				throw new BadRequestException();
+			}
+
+			if (post.authorId != user.id) {
+				throw new UnauthorizedException();
+			}
+
+			const updatedPost = await this.appService.updatePost({
+				id,
+				header,
+				text,
+				authorId: user.id
+			});
+
+			return updatedPost;
+		} catch (e) {
+			return {
+				message: e.message
+			};
+		}
+	}
+
+	@Delete('posts/delete')
+	async deletePost(@Req() request: Request, @Body('id') id: number) {
+		try {
+			const cookie = request.cookies['jwt'];
+
+			const data = await this.jwtService.verifyAsync(cookie);
+
+			const user = await this.appService.findOne({ id: data['id'] });
+
+			const post = await this.appService.getPostById({ id: id });
+
+			if (post.authorId != user.id) {
+				throw new UnauthorizedException();
+			}
+
+			await this.appService.deletePost(post.id);
+
+			return {
+				message: 'post is deleted'
+			};
+		} catch (e) {
+			throw new UnauthorizedException();
+		}
 	}
 }
