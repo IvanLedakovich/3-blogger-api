@@ -24,7 +24,7 @@ import { Post } from './post/post.entity';
 		TypeOrmModule.forFeature([Post]),
 		JwtModule.register({
 			secret: process.env.JWT_SECRET,
-			signOptions: { expiresIn: process.env.EXPIRY_TERM }
+			signOptions: { expiresIn: process.env.JWT_EXPIRY_TERM }
 		})
 	],
 	controllers: [AppController],

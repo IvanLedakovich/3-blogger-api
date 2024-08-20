@@ -1,3 +1,4 @@
+import { IsInt } from 'class-validator';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('posts')
