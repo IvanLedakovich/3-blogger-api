@@ -9,7 +9,6 @@ export class User {
 	@Column({ unique: true })
 	@IsEmail()
 	@IsNotEmpty()
-	@IsNumber()
 	email: string;
 
 	@Column()

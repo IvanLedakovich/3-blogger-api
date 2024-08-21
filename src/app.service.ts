@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { validate } from 'class-validator';
 import { Repository } from 'typeorm';
 import { Post } from './post/post.entity';
+import { CreateUserDto } from './user/createUserDto';
 import { User } from './user/user.entity';
-import { validateUser } from './utils/validators/user.validator';
 
 @Injectable()
 export class AppService {
@@ -11,17 +12,10 @@ export class AppService {
 		@InjectRepository(User) private readonly userRepository: Repository<User>,
 		@InjectRepository(Post) private readonly postRepository: Repository<Post>
 	) {}
-	async createUser(data: any): Promise<User> {
-		return validateUser(data).then((errors) => {
-			// errors is an array of validation errors
-			if (errors.length > 0) {
-				console.log('validation failed. errors: ', errors);
-				return null;
-			} else {
-				console.log('validation succeed');
-				return this.userRepository.save(data);
-			}
-		});
+	async createUser(data: CreateUserDto): Promise<User> {
+		console.log(validate(data));
+
+		return this.userRepository.save(data);
 	}
 
 	async getAllPosts(): Promise<Post[]> {
