@@ -9,14 +9,8 @@ import { User } from './user/user.entity';
 @Injectable()
 export class AppService {
 	constructor(
-		@InjectRepository(User) private readonly userRepository: Repository<User>,
 		@InjectRepository(Post) private readonly postRepository: Repository<Post>
 	) {}
-	async createUser(data: CreateUserDto): Promise<User> {
-		console.log(validate(data));
-
-		return this.userRepository.save(data);
-	}
 
 	async getAllPosts(): Promise<Post[]> {
 		return this.postRepository.find({ where: [null] });
@@ -36,9 +30,5 @@ export class AppService {
 
 	async deletePost(data: any) {
 		this.postRepository.delete(data);
-	}
-
-	async findOne(condition: any): Promise<User> {
-		return this.userRepository.findOne({ where: [condition] });
 	}
 }

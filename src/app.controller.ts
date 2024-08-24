@@ -18,11 +18,13 @@ import { CreatePostDto } from './post/CreatePostDto';
 import { DeletePostDto } from './post/DeletePostDto';
 import { UpdatePostDto } from './post/UpdatePostDto';
 import { CreateUserDto } from './user/createUserDto';
+import { UserService } from './user/user.service';
 
 @Controller('api')
 export class AppController {
 	constructor(
 		private readonly appService: AppService,
+		private readonly userService: UserService,
 		private jwtService: JwtService
 	) {}
 
@@ -30,7 +32,7 @@ export class AppController {
 	async register(@Body() dto: CreateUserDto) {
 		const hashedPassword = await bcrypt.hash(dto.password, 12);
 
-		const user = await this.appService.createUser({
+		const user = await this.userService.createUser({
 			email: dto.email,
 			password: hashedPassword
 		});
@@ -46,7 +48,7 @@ export class AppController {
 		@Body('password') password: string,
 		@Res({ passthrough: true }) response: Response
 	) {
-		const user = await this.appService.findOne({ email: email });
+		const user = await this.userService.findOne({ email: email });
 
 		if (!user) {
 			throw new BadRequestException('Invalid credentials');
@@ -76,7 +78,7 @@ export class AppController {
 				throw new UnauthorizedException();
 			}
 
-			const user = await this.appService.findOne({ id: data['id'] });
+			const user = await this.userService.findOne({ id: data['id'] });
 
 			const { password, ...result } = user;
 
@@ -113,7 +115,7 @@ export class AppController {
 
 			const data = await this.jwtService.verifyAsync(cookie);
 
-			const user = await this.appService.findOne({ id: data['id'] });
+			const user = await this.userService.findOne({ id: data['id'] });
 
 			const post = await this.appService.createPost({
 				header: dto.header,
@@ -134,7 +136,7 @@ export class AppController {
 
 			const data = await this.jwtService.verifyAsync(cookie);
 
-			const user = await this.appService.findOne({ id: data['id'] });
+			const user = await this.userService.findOne({ id: data['id'] });
 
 			const post = await this.appService.getPostById({ id: dto.id });
 
@@ -168,7 +170,7 @@ export class AppController {
 
 			const data = await this.jwtService.verifyAsync(cookie);
 
-			const user = await this.appService.findOne({ id: data['id'] });
+			const user = await this.userService.findOne({ id: data['id'] });
 
 			const post = await this.appService.getPostById({ id: dto.id });
 
