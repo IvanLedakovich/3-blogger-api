@@ -1,10 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { validate } from 'class-validator';
 import { Repository } from 'typeorm';
 import { Post } from './post/post.entity';
-import { CreateUserDto } from './user/createUserDto';
-import { User } from './user/user.entity';
 
 @Injectable()
 export class AppService {

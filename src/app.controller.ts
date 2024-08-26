@@ -17,7 +17,7 @@ import { AppService } from './app.service';
 import { CreatePostDto } from './post/CreatePostDto';
 import { DeletePostDto } from './post/DeletePostDto';
 import { UpdatePostDto } from './post/UpdatePostDto';
-import { CreateUserDto } from './user/createUserDto';
+import { CreateUserDto } from './user/CreateUserDto';
 import { UserService } from './user/user.service';
 
 @Controller('api')
